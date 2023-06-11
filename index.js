@@ -1,8 +1,7 @@
-const http = require("http");
 const express = require("express");
 const app = express();
-const connect_to_db = require("./db");
 var cors = require("cors");
+const connect_to_db = require("./db");
 // var cookieParser = require("cookie-parser");
 const PORT = 8800;
 
@@ -16,3 +15,6 @@ app.use(express.json());
 app.use(cors());
 // app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
+
+//Routes
+app.use("/account", require("./Routes/auth/account"));

@@ -1,7 +1,7 @@
 {
-  "name": "greenvalley",
+  "name": "graybooks",
   "version": "1.0.0",
-  "description": "This is the backend of the greenvalley project",
+  "description": "This is the backend of the graybooks project",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
