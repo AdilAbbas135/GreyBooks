@@ -4,6 +4,8 @@ const AllUsersModel = require("../../Model/Allusers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const OTPModel = require("../../Model/Token");
+const UserModel = require("../../Model/Users");
+const SendMail = require("../../utils/SendMail");
 
 // ROUTE 1 : REGISTER WITH MAIL AND SEND VERIFY EMAIL
 router.post("/createaccount", async (req, res) => {
