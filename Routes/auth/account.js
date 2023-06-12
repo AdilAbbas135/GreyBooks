@@ -14,8 +14,9 @@ router.post("/createaccount", async (req, res) => {
       let user = null;
       if (!finduser2) {
         user = await UserModel.create({
-          email: req.body.email,
-          UserName: req.body.userName,
+          email: req.body.Email,
+          UserName: req.body.UserName,
+          Password: req.body.Password,
         });
       } else {
         user = finduser2;
