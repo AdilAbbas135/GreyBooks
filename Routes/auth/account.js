@@ -3,62 +3,63 @@ const router = express.Router();
 const AllUsersModel = require("../../Model/Allusers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const OTPModel = require("../../Model/Token");
 
 // ROUTE 1 : REGISTER WITH MAIL AND SEND VERIFY EMAIL
-// router.post("/createaccount", async (req, res) => {
-//   try {
-//     const finduser = await AllUsersModel.findOne({ Email: req.query.email });
-//     if (!finduser) {
-//       const finduser2 = await UserModel.findOne({ email: req.query.email });
-//       let user = null;
-//       if (!finduser2) {
-//         user = await UserModel.create({ email: req.query.email });
-//       } else {
-//         user = finduser2;
-//       }
+router.post("/createaccount", async (req, res) => {
+  try {
+    const finduser = await AllUsersModel.findOne({ Email: req.query.email });
+    if (!finduser) {
+      const finduser2 = await UserModel.findOne({ email: req.query.email });
+      let user = null;
+      if (!finduser2) {
+        user = await UserModel.create({
+          email: req.body.email,
+          UserName: req.body.userName,
+        });
+      } else {
+        user = finduser2;
+      }
+      if (user) {
+        const token = assigntoken(user);
+        if (token) {
+          return res.status(200).json({
+            success: true,
+            msg: "email has been sent to your email addrsss",
+          });
+        } else {
+          return res
+            .status(400)
+            .json({ success: false, msg: "error in sending the mail" });
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, msg: "error in creating the user" });
+      }
+    } else {
+      return res.status(400).json({ msg: "This Email is Already Registered" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal Server Error" });
+  }
+});
 
-//       if (user) {
-//         const token = assigntoken(user);
-//         if (token) {
-//           return res.status(200).json({
-//             success: true,
-//             msg: "email has been sent to your email addrsss",
-//           });
-//         } else {
-//           return res
-//             .status(400)
-//             .json({ success: false, msg: "error in sending the mail" });
-//         }
-//       } else {
-//         return res
-//           .status(400)
-//           .json({ success: false, msg: "error in creating the user" });
-//       }
-//     } else {
-//       return res
-//         .status(400)
-//         .json({ success: false, msg: "This Email is Already Registered" });
-//     }
-//   } catch (error) {
-//     return res
-//       .status(500)
-//       .json({ success: false, error: "Internal Server Error" });
-//   }
-// });
-
-// async function assigntoken(user) {
-//   const token = await TokenModel.create({
-//     userId: user._id,
-//     token: crypto.randomBytes(32).toString("hex"),
-//   });
-//   const url = `${process.env.BASE_URL}auth/signup/emailverification?user=${user._id}&token=${token.token}`;
-//   const sendmail = await SendMail(user.email, "Verify Your Email Address", url);
-//   if (sendmail) {
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
+async function assigntoken(user) {
+  const token = await OTPModel.create({
+    userId: user._id,
+    token: Math.floor(1000 + Math.random() * 9000),
+  });
+  const url = `Your Otp Token is ${token.token}`;
+  const sendmail = await SendMail(user.email, "Verify Your Email Address", url);
+  if (sendmail) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 // ROUTE 2 : VERIFY TOKEN/EMAIL AND CREATE USER ACCOUNT
 // router.post("/verifyemail/:userid/:token", async (req, res) => {
