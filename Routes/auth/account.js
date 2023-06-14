@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const OTPModel = require("../../Model/Token");
 const UserModel = require("../../Model/Users");
 const SendMail = require("../../utils/SendMail");
+const ProfileModel = require("../../Model/Profile");
 
 // ROUTE 1 : REGISTER WITH MAIL AND SEND VERIFY EMAIL
 router.post("/createaccount", async (req, res) => {
@@ -28,6 +29,7 @@ router.post("/createaccount", async (req, res) => {
         if (token) {
           return res.status(200).json({
             success: true,
+            // userId: user?._id,
             msg: "email has been sent to your email addrsss",
           });
         } else {
@@ -65,40 +67,92 @@ async function assigntoken(user) {
 }
 
 // ROUTE 2 : VERIFY TOKEN/EMAIL AND CREATE USER ACCOUNT
-// router.post("/verifyemail/:userid/:token", async (req, res) => {
-//   const user = await UserModel.findById(req.params.userid);
-//   if (user) {
-//     const token = await TokenModel.findOne({
-//       userId: user._id,
-//       token: req.params.token,
-//     });
-//     if (token) {
-//       const newUser = await AllUsersModel.create({
-//         Email: user.email,
-//         AccountType: "email",
-//         isEmailVerified: true,
-//       });
-//       if (newUser) {
-//         await UserModel.findByIdAndDelete(req.params.userid);
-//         await TokenModel.findByIdAndDelete(token._id);
-//         return res.status(200).json({
-//           success: true,
-//           User: newUser,
-//         });
-//       } else {
-//         return res.status(400).json({
-//           success: false,
-//           user: false,
-//           msg: "error in creating the user account",
-//         });
-//       }
-//     } else {
-//       return res.status(400).json({ success: false, msg: "invalid Link" });
-//     }
-//   } else {
-//     return res.status(400).json({ success: false, msg: "Invalid Link" });
-//   }
-// });
+router.post("/verifyemail/", async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.body.userid);
+    if (user) {
+      const token = await OTPModel.findOne({
+        userId: user._id,
+        token: req.body.Token,
+      });
+      if (token) {
+        const newUser = await AllUsersModel.create({
+          Email: user.email,
+          Password: req.body.Password,
+          UserName: req.body.UserName,
+          isEmailVerified: true,
+        });
+        if (newUser) {
+          await UserModel.findByIdAndDelete(req.body.userid);
+          await OTPModel.findByIdAndDelete(token._id);
+          const Profile = await ProfileModel.findOne({ Email: req.body.Email });
+          if (!Profile) {
+            const newProfile = await ProfileModel.create({
+              UserName: req.body.UserName ? req.body.UserName : "",
+              Email: req.body.Email,
+              Password: req.body.Password,
+              userId: newUser?._id,
+            });
+            if (newProfile) {
+              const updateUserModel = await AllUsersModel.findByIdAndUpdate(
+                newProfile.userId,
+                {
+                  $set: {
+                    profileId: newProfile._id,
+                    Password: req.body.Password,
+                  },
+                }
+              );
+              if (updateUserModel) {
+                const authtoken = jwt.sign(
+                  {
+                    userId: newProfile.userId,
+                    profileId: newProfile._id,
+                    email: newProfile.Email,
+                    ProfilePicture: newProfile.ProfilePicture,
+                  },
+                  process.env.JWT_SECRET_KEY,
+                  { expiresIn: "1d" }
+                );
+                return res.status(200).json({
+                  success: true,
+                  User: updateUserModel,
+                  Profile: newProfile,
+                  authtoken,
+                  msg: "profile creaed and user model updated successfully",
+                });
+              } else {
+                res.status(400).json({
+                  success: true,
+                  Profile: newProfile,
+                  error: "profile created but user model was not updated",
+                });
+              }
+            }
+          }
+
+          // return res.status(200).json({
+          //   success: true,
+          //   User: newUser,
+          // });
+        } else {
+          return res.status(400).json({
+            success: false,
+            user: false,
+            msg: "error in creating the user account",
+          });
+        }
+      } else {
+        return res.status(400).json({ success: false, error: "invalid Link" });
+      }
+    } else {
+      return res.status(400).json({ success: false, error: "Invalid Link" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 // ROUTE 3 : Login User with Email and password
 router.post("/login", async (req, res) => {

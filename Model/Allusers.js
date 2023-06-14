@@ -10,14 +10,14 @@ const AllUsersSchema = new Schema(
     Password: {
       type: String,
     },
+    UserName: {
+      type: String,
+    },
     profileId: {
       type: Schema.Types.ObjectId,
       default: null,
     },
-    userRole: {
-      type: String,
-      default: null,
-    },
+
     isEmailVerified: { type: Boolean, default: false },
   },
   { timestamps: true }

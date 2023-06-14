@@ -11,6 +11,9 @@ module.exports = async (email, subject, text) => {
         user: process.env.USER,
         pass: process.env.PASSWORD,
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     await transporter.sendMail({
