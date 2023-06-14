@@ -29,7 +29,7 @@ router.post("/createaccount", async (req, res) => {
         if (token) {
           return res.status(200).json({
             success: true,
-            // userId: user?._id,
+            userid: user?._id,
             msg: "email has been sent to your email addrsss",
           });
         } else {
@@ -73,7 +73,7 @@ router.post("/verifyemail/", async (req, res) => {
     if (user) {
       const token = await OTPModel.findOne({
         userId: user._id,
-        token: req.body.Token,
+        token: Number(req.body.Token),
       });
       if (token) {
         const newUser = await AllUsersModel.create({
