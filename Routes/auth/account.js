@@ -178,18 +178,18 @@ router.post("/login", async (req, res) => {
       } else {
         return res
           .status(400)
-          .json({ success: false, msg: "Wrong Credentials! Try Again" });
+          .json({ success: false, error: "Wrong Credentials! Try Again" });
       }
     } else {
       return res
         .status(400)
-        .json({ success: false, msg: "Wrong Credentials! Try Again" });
+        .json({ success: false, error: "Wrong Credentials! Try Again" });
     }
   } catch (error) {
     console.log(error);
     return res
       .status(400)
-      .json({ success: false, msg: "Internal Server Error" });
+      .json({ success: false, error: "Internal Server Error" });
   }
 });
 
