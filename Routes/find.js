@@ -9,6 +9,7 @@ const router = express.Router();
 //GET ALL TUTIONS FOR ALL TUTIONS PAGE
 router.get("/tutions", async (req, res) => {
   // console.log("request recieved at the backend");
+
   try {
     const tutions = await TutionModel.aggregate([
       {

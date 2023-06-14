@@ -156,14 +156,10 @@ router.post("/verifyemail/", async (req, res) => {
 
 // ROUTE 3 : Login User with Email and password
 router.post("/login", async (req, res) => {
-  console.log("request recieved");
   try {
-    const User = await AllUsersModel.findOne({ Email: req.body.email });
+    const User = await AllUsersModel.findOne({ Email: req.body.Email });
     if (User) {
-      const password = await bcrypt.compare(req.body.password, User.Password);
-      if (password) {
-        let isProfileApproved;
-        let Profile;
+      if (User.Password === req.body.Password) {
         const authtoken = jwt.sign(
           {
             userId: User?._id,
