@@ -14,7 +14,6 @@ app.listen(PORT, () => {
 connect_to_db();
 app.use(express.json());
 app.use(cors());
-// app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
 //Routes
