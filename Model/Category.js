@@ -5,6 +5,9 @@ const CategorySchema = new Schema(
     Name: {
       type: String,
     },
+    icon: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
