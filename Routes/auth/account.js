@@ -7,6 +7,9 @@ const OTPModel = require("../../Model/Token");
 const UserModel = require("../../Model/Users");
 const SendMail = require("../../utils/SendMail");
 const ProfileModel = require("../../Model/Profile");
+const VerifyToken = require("../../Middlewear/VerifyToken");
+const BooksModel = require("../../Model/Books");
+const { default: mongoose } = require("mongoose");
 
 // ROUTE 1 : REGISTER WITH MAIL AND SEND VERIFY EMAIL
 router.post("/createaccount", async (req, res) => {
@@ -190,6 +193,21 @@ router.post("/login", async (req, res) => {
     return res
       .status(400)
       .json({ success: false, error: "Internal Server Error" });
+  }
+});
+
+router.post("/books", VerifyToken, async (req, res) => {
+  try {
+    const Books = await BooksModel.aggregate([
+      {
+        $match: {
+          profileId: mongoose.Types.ObjectId(req.user.profileId),
+        },
+      },
+    ]);
+    return res.status(200).json({ Books });
+  } catch (error) {
+    console.log(error);
   }
 });
 
