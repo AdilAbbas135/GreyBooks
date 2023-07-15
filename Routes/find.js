@@ -14,6 +14,29 @@ router.get("/books", async (req, res) => {
   }
 });
 
+//FETCH SINGLE BOOK DETAILS
+router.get("/books/:id", async (req, res) => {
+  try {
+    const Book = await BooksModel.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(req.params.id),
+        },
+        $lookup: {
+          from: "profiles",
+          localField: "profileId",
+          foreignField: "_id",
+          as: "User",
+        },
+      },
+    ]);
+    return res.status(200).json({ Book: Book[0] });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 //FETCH ALL BOOKS OF A SPECIFIC CATEGORY
 router.get("/books/:category", async (req, res) => {
   try {
