@@ -20,8 +20,10 @@ router.get("/books/:id", async (req, res) => {
     const Book = await BooksModel.aggregate([
       {
         $match: {
-          _id: mongoose.Types.ObjectId(req.params.id),
+          _id: new mongoose.Types.ObjectId(req.params.id),
         },
+      },
+      {
         $lookup: {
           from: "profiles",
           localField: "profileId",
