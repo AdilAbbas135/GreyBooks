@@ -34,7 +34,7 @@ const ProfileSchema = new Schema(
       unique: true,
     },
     PhoneNo: {
-      type: Number,
+      type: String,
     },
     ProfilePicture: {
       type: String,
