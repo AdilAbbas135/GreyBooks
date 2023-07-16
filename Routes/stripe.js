@@ -2,7 +2,7 @@ const express = require("express");
 const stripe = require("stripe")(process.env.STRIPE_KEY);
 const router = express.Router();
 
-router.post("/create-intent", async (req, res) => {
+router.post("/payment-sheet", async (req, res) => {
   try {
     const customer = await stripe.customers.create();
     const ephemeralKey = await stripe.ephemeralKeys.create(

@@ -196,6 +196,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// ROUTE 4 : FETCH ALL BOOKS ADDED BY A SPECIFIC USER
 router.post("/books", VerifyToken, async (req, res) => {
   try {
     const Books = await BooksModel.aggregate([
@@ -206,6 +207,24 @@ router.post("/books", VerifyToken, async (req, res) => {
       },
     ]);
     return res.status(200).json({ Books });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// ROUTER 5 : FETCH USER-PROFILE
+router.post("/fetch-profile", VerifyToken, async (req, res) => {
+  try {
+    const Profile = await ProfileModel.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.objectId(req.user.profileId),
+        },
+      },
+    ]);
+
+    return res.status(200).json({ Profile: Profile[0] });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
