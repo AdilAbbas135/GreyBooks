@@ -232,4 +232,26 @@ router.post("/fetch-profile", VerifyToken, async (req, res) => {
   }
 });
 
+// ROUTER 6 : Update USER-PROFILE
+router.post("/update-profile", VerifyToken, async (req, res) => {
+  try {
+    const Profile = await ProfileModel.findById(req.user.profileId);
+    if (Profile) {
+      await Profile.updateOne({
+        $set: {
+          UserName: req.body.UserName,
+          PhoneNo: req.body.PhoneNo,
+          Address: req.body.Address,
+        },
+      });
+      return res.status(200).json({ msg: "Profile updated successfully" });
+    } else {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = router;

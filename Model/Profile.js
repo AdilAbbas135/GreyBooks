@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const AddressSchema = new Schema(
-  {
-    Village: {
-      type: String,
-    },
-    Province: {
-      type: String,
-    },
-    City: { type: String },
-    ZipCode: { type: String },
-  },
-  { timestamps: true }
-);
+// const AddressSchema = new Schema(
+//   {
+//     Village: {
+//       type: String,
+//     },
+//     Province: {
+//       type: String,
+//     },
+//     City: { type: String },
+//     ZipCode: { type: String },
+//   },
+//   { timestamps: true }
+// );
 
 const ProfileSchema = new Schema(
   {
@@ -39,7 +39,7 @@ const ProfileSchema = new Schema(
     ProfilePicture: {
       type: String,
     },
-    Address: { type: AddressSchema },
+    Address: { type: String },
   },
   { timestamps: true }
 );
