@@ -216,15 +216,16 @@ router.post("/books", VerifyToken, async (req, res) => {
 // ROUTER 5 : FETCH USER-PROFILE
 router.post("/fetch-profile", VerifyToken, async (req, res) => {
   try {
-    const Profile = await ProfileModel.aggregate([
-      {
-        $match: {
-          _id: new mongoose.Types.objectId(req.user.profileId),
-        },
-      },
-    ]);
-
-    return res.status(200).json({ Profile: Profile[0] });
+    // const Profile = await ProfileModel.aggregate([
+    //   {
+    //     $match: {
+    //       _id: new mongoose.Types.ObjectId(req.user.profileId),
+    //     },
+    //   },
+    // ]);
+    const Profile = await ProfileModel.findById(req.user.profileId);
+    console.log(Profile);
+    return res.status(200).json({ Profile: Profile });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
