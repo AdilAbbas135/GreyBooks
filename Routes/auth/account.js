@@ -221,6 +221,21 @@ router.post("/books", VerifyToken, async (req, res) => {
   }
 });
 
+// ROUTE 4 : DELETE ADDED BY A SPECIFIC USER
+router.post("/books/delete/:id", VerifyToken, async (req, res) => {
+  try {
+    const Book = await BooksModel.findByIdAndDelete(req.params.id);
+    if (Books) {
+      return res.status(200).json({ msg: "Book deleted successfully" });
+    } else {
+      return res.status(404).json({ error: "Product Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 // ROUTER 5 : FETCH USER-PROFILE
 router.post("/fetch-profile", VerifyToken, async (req, res) => {
   try {
