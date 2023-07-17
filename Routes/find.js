@@ -69,7 +69,7 @@ router.get("/books/:id", async (req, res) => {
 });
 
 //FETCH ALL BOOKS OF A SPECIFIC CATEGORY
-router.get("/books/:category", async (req, res) => {
+router.get("/books/category/:category", async (req, res) => {
   try {
     if (mongoose.Types.ObjectId.isValid(req.params.category)) {
       const Books = await BooksModel.find({ Category: req.params.category });
