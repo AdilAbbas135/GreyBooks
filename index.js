@@ -21,3 +21,4 @@ app.use("/account", require("./Routes/auth/account"));
 app.use("/books", require("./Routes/Books"));
 app.use("/find", require("./Routes/find"));
 app.use("/stripe", require("./Routes/stripe"));
+app.use("/chat", require("./Routes/chat"));

@@ -39,6 +39,10 @@ const ProfileSchema = new Schema(
     ProfilePicture: {
       type: String,
     },
+    isNeedy: {
+      type: Boolean,
+      default: false,
+    },
     Address: { type: String },
   },
   { timestamps: true }

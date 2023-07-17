@@ -213,6 +213,7 @@ router.post("/books", VerifyToken, async (req, res) => {
           as: "CategoryDetail",
         },
       },
+      { $sort: { createdat: -1 } },
     ]);
     return res.status(200).json({ Books });
   } catch (error) {
@@ -225,7 +226,7 @@ router.post("/books", VerifyToken, async (req, res) => {
 router.post("/books/delete/:id", VerifyToken, async (req, res) => {
   try {
     const Book = await BooksModel.findByIdAndDelete(req.params.id);
-    if (Books) {
+    if (Book) {
       return res.status(200).json({ msg: "Book deleted successfully" });
     } else {
       return res.status(404).json({ error: "Product Not Found" });
