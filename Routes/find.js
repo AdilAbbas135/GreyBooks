@@ -3,6 +3,19 @@ const BooksModel = require("../Model/Books");
 const { default: mongoose } = require("mongoose");
 const router = express.Router();
 
+//SEARCH BOOK ACCORDING TO THE GIVEN NAME
+router.post("/search", async (req, res) => {
+  try {
+    const Books = await BooksModel.find({ Name: re.body.Name }).sort({
+      createdAt: -1,
+    });
+    return res.status(200).json({ Books });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 //FETCH ALL BOOK
 router.get("/books", async (req, res) => {
   try {
