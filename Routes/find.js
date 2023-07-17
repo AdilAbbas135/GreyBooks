@@ -6,9 +6,25 @@ const router = express.Router();
 //SEARCH BOOK ACCORDING TO THE GIVEN NAME
 router.post("/search", async (req, res) => {
   try {
-    const Books = await BooksModel.find({ Name: re.body.Name }).sort({
-      createdAt: -1,
-    });
+    // console.log(req.body);
+    const Books = await BooksModel.aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              Name: {
+                $regex: req.body?.Name ? new RegExp(req.body.Name, "i") : null,
+              },
+            },
+          ],
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
     return res.status(200).json({ Books });
   } catch (error) {
     console.log(error);
