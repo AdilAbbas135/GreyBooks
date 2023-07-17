@@ -205,6 +205,14 @@ router.post("/books", VerifyToken, async (req, res) => {
           profileId: new mongoose.Types.ObjectId(req.user.profileId),
         },
       },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "Category",
+          foreignField: "_id",
+          as: "Category",
+        },
+      },
     ]);
     return res.status(200).json({ Books });
   } catch (error) {
