@@ -210,7 +210,7 @@ router.post("/books", VerifyToken, async (req, res) => {
           from: "categories",
           localField: "Category",
           foreignField: "_id",
-          as: "Category",
+          as: "CategoryDetail",
         },
       },
     ]);
