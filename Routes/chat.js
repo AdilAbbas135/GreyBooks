@@ -26,6 +26,7 @@ router.post("/chat", VerifyToken, async (req, res) => {
     });
 
     const Reciever = await ProfileModel.findById(req.body?.RecieverId);
+    const Sender = await ProfileModel.findById(req.user?.profileId);
     const AllChats = await MessagesModel.aggregate([
       {
         $match: {
@@ -41,7 +42,7 @@ router.post("/chat", VerifyToken, async (req, res) => {
         },
       },
     ]);
-    return res.status(200).json({ AllChats, Reciever });
+    return res.status(200).json({ AllChats, Reciever, Sender });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
