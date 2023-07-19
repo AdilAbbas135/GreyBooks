@@ -3,13 +3,8 @@ const { Schema } = mongoose;
 
 const RoomSchema = new Schema(
   {
-    SenderId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-    },
-    RecieverId: {
-      type: Schema.Types.ObjectId,
-      required: true,
+    Members: {
+      type: Array,
     },
   },
   { timestamps: true }

@@ -22,7 +22,7 @@ router.post("/payment-sheet", async (req, res) => {
       ephemeralKey: ephemeralKey.secret,
       customer: customer.id,
       publishableKey:
-        "pk_test_51JGojQHB8vwABSSpHM2xByAZIfXbe0OIFVUmcrexiKkJmzHZAAj8457O7BuGXCiNkzQWWKpWsUiLQJj6ZTDXIpCS00RsoWj3HG",
+        "pk_test_51NVTh4KV4PxCQk433ZwEXKaJyU9civa9bn8f38IFrkgjO5lhcT0BVQE1UDOu6BSGQBwTqVVAy7nuAApqM0d5Tr47000V8TNAQ0",
     });
   } catch (error) {
     console.log(error);
