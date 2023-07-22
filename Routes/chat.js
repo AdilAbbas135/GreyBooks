@@ -41,6 +41,7 @@ router.post("/chat", VerifyToken, async (req, res) => {
           as: "Reciever",
         },
       },
+      { $sort: { createdAt: -1 } },
     ]);
     return res.status(200).json({ AllChats, Reciever, Sender });
   } catch (error) {
