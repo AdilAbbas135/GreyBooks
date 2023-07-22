@@ -15,6 +15,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+router.post("/testing", upload.single("file"), async (req, res) => {
+  try {
+    if (req.file.path) {
+      return res.status(200).json(req.file);
+    } else {
+      return res.status(404).json({ error: "File Not Uploaded" });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 router.post(
   "/addbook",
   VerifyToken,
