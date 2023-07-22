@@ -13,13 +13,17 @@ router.post("/all-rooms", VerifyToken, async (req, res) => {
     //   Members: { $in: [req.user.profileId] },
     // });
     const Chats = await RoomModel.aggregate([
-      { $match: { Members: { $in: [req.user.profileId] } } },
+      {
+        $match: {
+          Members: { $in: [new mongoose.Types.ObjectId(req.user.profileId)] },
+        },
+      },
       {
         $unwind: "$Members",
       },
       {
         $lookup: {
-          from: "profile",
+          from: "profiles",
           localField: "Members",
           foreignField: "_id",
           as: "Users",
@@ -76,7 +80,7 @@ router.post("/send-message", VerifyToken, async (req, res) => {
     });
     console.log("room is");
     console.log(Room);
-    if (!Room._id) {
+    if (!Room?._id) {
       FinalRoom = await RoomModel.create({
         Members: [req.user.profileId, req.body.RecieverId],
       });
