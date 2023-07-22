@@ -9,11 +9,28 @@ const router = express.Router();
 // FETCH ALL ROOMS OF A SPECIFIC USER
 router.post("/all-rooms", VerifyToken, async (req, res) => {
   try {
-    const Chats = await RoomModel.find({
-      Members: { $in: [req.user.profileId] },
-    });
+    // const Chats = await RoomModel.find({
+    //   Members: { $in: [req.user.profileId] },
+    // });
+    const Chats = await RoomModel.aggregate([
+      { $match: { Members: { $in: [req.user.profileId] } } },
+      {
+        $unwind: "$Members",
+      },
+      {
+        $lookup: {
+          from: "profile",
+          localField: "Members",
+          foreignField: "_id",
+          as: "Users",
+        },
+      },
+      { $sort: { createdAt: -1 } },
+    ]);
+
     return res.status(200).json(Chats);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });

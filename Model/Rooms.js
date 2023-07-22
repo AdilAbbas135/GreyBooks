@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const RoomSchema = new Schema(
   {
     Members: {
-      type: Array,
+      type: [mongoose.Types.ObjectId],
     },
   },
   { timestamps: true }
