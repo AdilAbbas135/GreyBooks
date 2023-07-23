@@ -78,8 +78,8 @@ router.post("/send-message", VerifyToken, async (req, res) => {
     const Room = await RoomModel.findOne({
       Members: { $in: [req.user.profileId, req.body.RecieverId] },
     });
-    console.log("room is");
-    console.log(Room);
+    // console.log("room is");
+    // console.log(Room);
     if (!Room?._id) {
       FinalRoom = await RoomModel.create({
         Members: [req.user.profileId, req.body.RecieverId],

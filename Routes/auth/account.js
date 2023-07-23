@@ -10,6 +10,19 @@ const ProfileModel = require("../../Model/Profile");
 const VerifyToken = require("../../Middlewear/VerifyToken");
 const BooksModel = require("../../Model/Books");
 const { default: mongoose } = require("mongoose");
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads/");
+  },
+  filename: (req, file, cb) => {
+    console.log("file original name is");
+    console.log(file.originalname);
+    const name = new Date().getTime() + "-" + file.originalname;
+    cb(null, name);
+  },
+});
+const upload = multer({ storage: storage });
 
 // ROUTE 1 : REGISTER WITH MAIL AND SEND VERIFY EMAIL
 router.post("/createaccount", async (req, res) => {
@@ -277,5 +290,32 @@ router.post("/update-profile", VerifyToken, async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// ROUTE 7 UPDATE PROFILE PICTURE
+router.post(
+  "/update-profilepicture",
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      const User = await ProfileModel.findById(req.user.profileId);
+      if (User) {
+        await User.updateOne(
+          {
+            $set: { ProfilePicture: req?.file?.path ? req?.file?.path : "" },
+          },
+          { upsert: true }
+        );
+        return res
+          .status(200)
+          .json({ msg: "Profile Picture updated successfully" });
+      } else {
+        return res.status(404).json({ error: "Profile Not Found" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
 
 module.exports = router;
