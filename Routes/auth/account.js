@@ -11,6 +11,7 @@ const VerifyToken = require("../../Middlewear/VerifyToken");
 const BooksModel = require("../../Model/Books");
 const { default: mongoose } = require("mongoose");
 const multer = require("multer");
+const DocumentsModal = require("../../Model/Documents");
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./uploads/");
@@ -314,6 +315,30 @@ router.post(
       } else {
         return res.status(404).json({ error: "Profile Not Found" });
       }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
+// ROUTE 8 UPLOAD DOCUMENTS
+router.post(
+  "/upload-documents",
+  VerifyToken,
+  upload.single("file"),
+  async (req, res) => {
+    try {
+      await DocumentsModal.create({
+        profileId: req.user.profileId,
+        Document: req.file.path,
+        isDocumentsSubmitted: true,
+        Message: "Documents Submitted. Waiting For Approval",
+        PhoneNo: req.body.PhoneNo,
+        CNIC: req.body.CNIC,
+        Occupation: req.body.Occupation,
+      });
+      return res.status(200).json({ msg: "Documents Submitted Successfully" });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
