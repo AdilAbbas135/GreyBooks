@@ -9,6 +9,8 @@ const storage = multer.diskStorage({
     cb(null, "./uploads/");
   },
   filename: (req, file, cb) => {
+    console.log("file original name is");
+    console.log(file.originalname);
     const name = new Date().getTime() + "-" + file.originalname;
     cb(null, name);
   },
@@ -30,12 +32,12 @@ router.post("/testing", upload.single("file"), async (req, res) => {
 router.post(
   "/addbook",
   VerifyToken,
-  // upload.single("file"),
+  upload.single("file"),
   async (req, res) => {
     try {
       await BooksModel.create({
         profileId: req.user.profileId,
-        // Image: req.file.path,
+        Image: req.file?.path ? req.file?.path : "",
         Name: req.body.Name,
         Description: req.body.Description,
         Price: req.body.Price,
