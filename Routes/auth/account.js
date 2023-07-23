@@ -176,7 +176,7 @@ router.post("/login", async (req, res) => {
     const User = await AllUsersModel.findOne({ Email: req.body.Email });
     if (User) {
       if (User.Password === req.body.Password) {
-        const Profile = await ProfileModel.findById(req.user.profileId);
+        const Profile = await ProfileModel.findById(User?.profileId);
         const authtoken = jwt.sign(
           {
             userId: User?._id,

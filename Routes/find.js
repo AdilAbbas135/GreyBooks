@@ -35,7 +35,17 @@ router.post("/search", async (req, res) => {
 //FETCH ALL BOOK
 router.get("/books", async (req, res) => {
   try {
-    const Books = await BooksModel.find();
+    const Books = await BooksModel.aggregate([
+      {
+        $lookup: {
+          from: "categories",
+          localField: "Category",
+          foreignField: "_id",
+          as: "Category",
+        },
+      },
+      { $unwind: "$Category" },
+    ]);
     return res.status(200).json({ Books });
   } catch (error) {
     console.log(error);
