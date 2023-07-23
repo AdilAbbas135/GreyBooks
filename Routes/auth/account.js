@@ -176,12 +176,14 @@ router.post("/login", async (req, res) => {
     const User = await AllUsersModel.findOne({ Email: req.body.Email });
     if (User) {
       if (User.Password === req.body.Password) {
+        const Profile = await ProfileModel.findById(req.user.profileId);
         const authtoken = jwt.sign(
           {
             userId: User?._id,
             profileId: User?.profileId,
             email: User?.Email,
             isEmailVerified: User?.isEmailVerified,
+            ProfilePicture: Profile?.ProfilePicture,
           },
           process.env.JWT_SECRET_KEY,
           { expiresIn: "1d" }
@@ -294,6 +296,7 @@ router.post("/update-profile", VerifyToken, async (req, res) => {
 // ROUTE 7 UPDATE PROFILE PICTURE
 router.post(
   "/update-profilepicture",
+  VerifyToken,
   upload.single("file"),
   async (req, res) => {
     try {
