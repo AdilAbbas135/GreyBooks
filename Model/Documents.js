@@ -6,8 +6,8 @@ const DocumentsSchema = new Schema(
       type: Schema.Types.ObjectId,
       required: true,
     },
-    Documents: {
-      type: [String],
+    Document: {
+      type: String,
     },
     isDocumentsSubmitted: {
       type: Boolean,

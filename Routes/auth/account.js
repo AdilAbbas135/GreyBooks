@@ -185,6 +185,7 @@ router.post("/login", async (req, res) => {
             email: User?.Email,
             isEmailVerified: User?.isEmailVerified,
             ProfilePicture: Profile?.ProfilePicture,
+            isNeedy: Profile?.isNeedy,
           },
           process.env.JWT_SECRET_KEY,
           { expiresIn: "1d" }
